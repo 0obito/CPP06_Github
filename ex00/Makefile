@@ -2,7 +2,7 @@ COMPILER = c++
 FLAGS    = -Wall -Wextra -Werror -std=c++98
 NAME     = ScalarConverter
 
-SRC     = ScalarConverter.cpp main.cpp
+SRC     = ScalarConverter.cpp helpingFuncts.cpp main.cpp
 OBJ     = $(SRC:%.cpp=$(OBJ_dir)%.o)
 OBJ_dir = objs/
 

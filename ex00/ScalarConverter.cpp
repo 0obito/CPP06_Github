@@ -1,19 +1,35 @@
 #include "ScalarConverter.hpp"
 
+bool isChar(const std::string& literal);
+bool isInt(const std::string& literal);
+bool isDoubleOrFloat(const std::string& literal);
+void isNone();
+
 ScalarConverter::ScalarConverter() {
 }
 
-ScalarConverter::ScalarConverter(ScalarConverter& other) {
+ScalarConverter::ScalarConverter(const ScalarConverter& other) {
     (void)other;
 }
 
-ScalarConverter& ScalarConverter::operator=(ScalarConverter& other) {
+ScalarConverter& ScalarConverter::operator=(const ScalarConverter& other) {
     (void)other;
+    return *this;
 }
 
 ScalarConverter::~ScalarConverter() {
 }
 
-static void ScalarConverter::convert(std::string& literal) {
-    ;
+void ScalarConverter::convert(const std::string& literal) {
+    if (literal.length() < 1) {
+        std::cerr<<"Provided literal is empty!\n";
+        return ;
+    }
+    if (isChar(literal))
+        return ;
+    else if (isInt(literal))
+        return ;
+    else if (isDoubleOrFloat(literal))
+        return ;
+    return isNone();
 }
