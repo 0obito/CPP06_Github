@@ -2,22 +2,33 @@
 #include <string>
 #include <cstdlib>
 #include <climits>
-#include <exception>
+#include <iomanip>
 
 void convertChar(char a) {
+    //char part
     if (a >= 32 && a <= 126)
         std::cout << "char: " << a << "\n";
     else
         std::cout << "char: Non displayable\n";
 
-    std::cout << "int: " << static_cast<int>(a) << "\n";
 
-    std::cout << "float: " << static_cast<float>(a) << "f\n";
+    // int part
+    int i = static_cast<int>(a);
+    std::cout << "int: " << i << "\n";
 
-    std::cout << "double: " << static_cast<double>(a) << "\n";
+
+    // float part
+    float f = static_cast<float>(a);
+    std::cout << "float: " << f << ".0f\n";
+
+
+    // double part
+    double d = static_cast<double>(a);
+    std::cout << "double: " << d << ".0\n";
 }
 
 void convertInt(int i) {
+    // char part
     if (i >= -128 && i <= 127) {
         if (i >= 32 && i <= 126)
             std::cout << "char: " << static_cast<char>(i) << "\n";
@@ -28,18 +39,34 @@ void convertInt(int i) {
         std::cout << "char: impossible\n";
     }
 
+
+    // int part
     std::cout << "int: " << i << "\n";
 
-    std::cout << "float: " << static_cast<float>(i) << "f\n";
 
-    std::cout << "double: " << static_cast<double>(i) << "\n";
+    // float part
+    std::cout << "float: ";
+    float f = static_cast<float>(i);
+    std::cout << std::fixed << std::setprecision(1);
+    std::cout << f << "f\n";
+
+    // double part
+    std::cout << "double: ";
+    double d = static_cast<double>(i);
+    std::cout << d << "\n";
+
+
+    // undoing the stream manipulation
+    std::cout.unsetf(std::ios_base::floatfield);
+    std::cout << std::setprecision(6);
 }
 
 void convertFloat(float f) {
+    // char part
     int i = static_cast<int>(f);
     if (i >= -128 && i <= 127) {
         if (i >= 32 && i <= 126)
-            std::cout << "char: " << static_cast<char>(i) << "\n";
+            std::cout << "char: " << static_cast<char>(f) << "\n";
         else
             std::cout << "char: Non displayable\n";
     }
@@ -47,18 +74,39 @@ void convertFloat(float f) {
         std::cout << "char: impossible\n";
     }
 
-    std::cout << "int: " << i << "\n";
 
-    std::cout << "float: " << f << "\n";
+    // int part
+    if (f != f || f > static_cast<float>(INT_MAX) || f < static_cast<float>(INT_MIN)) {
+        std::cout << "int: impossible\n";
+    }
+    else {
+        std::cout << "int: " << i << "\n";
+    }
 
-    std::cout << "double: " << static_cast<double>(f) << "\n";
+
+    // float part
+    std::cout << "float: ";
+    if (f == i)
+        std::cout << std::fixed << std::setprecision(1);
+    std::cout << f << "f\n";
+
+
+    // double part
+    double d = static_cast<double>(f);
+    std::cout << "double: " << d << "\n";
+
+
+    // undoing the stream manipulation
+    std::cout.unsetf(std::ios_base::floatfield);
+    std::cout << std::setprecision(6);
 }
 
 void convertDouble(double d) {
+    // char part
     int i = static_cast<int>(d);
     if (i >= -128 && i <= 127) {
         if (i >= 32 && i <= 126)
-            std::cout << "char: " << static_cast<char>(i) << "\n";
+            std::cout << "char: " << static_cast<char>(d) << "\n";
         else
             std::cout << "char: Non displayable\n";
     }
@@ -66,11 +114,31 @@ void convertDouble(double d) {
         std::cout << "char: impossible\n";
     }
 
-    std::cout << "int: " << i << "\n";
 
-    std::cout << "float: " << static_cast<float>(d) << "\n";
+    // int part
+    if (d != d || d > static_cast<double>(INT_MAX) || d < static_cast<double>(INT_MIN)) {
+        std::cout << "int: impossible\n";
+    }
+    else {
+        std::cout << "int: " << i << "\n";
+    }
 
+
+    // float part
+    float f = static_cast<float>(d);
+    std::cout << "float: ";
+    if (f == i)
+        std::cout << std::fixed << std::setprecision(1);
+    std::cout << f << "f\n";
+
+
+    // double part
     std::cout << "double: " << d << "\n";
+
+
+    // undoing the stream manipulation
+    std::cout.unsetf(std::ios_base::floatfield);
+    std::cout << std::setprecision(6);
 }
 
 bool isChar(const std::string& literal) {
@@ -97,18 +165,14 @@ bool isInt(const std::string& literal) {
 }
 
 bool isDoubleOrFloat(const std::string& literal) {
-    // if (literal == "-inf" || literal == "+inf" || literal == "nan" ||
-    //     literal == "-inff" || literal == "+inff" || literal == "nanf" ) {
-    //         ;
-    // }
     char *endPtr;
     double d = std::strtod(literal.c_str(), &endPtr);
     if (*endPtr == '\0') {
-        convertDouble(d + 0.0);
+        convertDouble(d);
         return true;
     }
     if ((*endPtr == 'f') && (*(endPtr + 1) == '\0')) {
-        convertFloat(static_cast<float>(d) + 0.0);
+        convertFloat(static_cast<float>(d));
         return true;
     }
     return false;

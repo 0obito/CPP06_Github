@@ -21,10 +21,8 @@ ScalarConverter::~ScalarConverter() {
 }
 
 void ScalarConverter::convert(const std::string& literal) {
-    if (literal.length() < 1) {
-        std::cerr<<"Provided literal is empty!\n";
-        return ;
-    }
+    if (literal.length() < 1)
+        return isNone();
     if (isChar(literal))
         return ;
     else if (isInt(literal))
