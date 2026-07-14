@@ -2,7 +2,8 @@
 
 bool isChar(const std::string& literal);
 bool isInt(const std::string& literal);
-bool isDoubleOrFloat(const std::string& literal);
+bool isFloat(const std::string& literal);
+bool isDouble(const std::string& literal);
 void isNone();
 
 ScalarConverter::ScalarConverter() {
@@ -27,7 +28,9 @@ void ScalarConverter::convert(const std::string& literal) {
         return ;
     else if (isInt(literal))
         return ;
-    else if (isDoubleOrFloat(literal))
+    else if (isFloat(literal))
+        return ;
+    else if (isDouble(literal))
         return ;
     return isNone();
 }

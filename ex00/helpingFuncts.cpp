@@ -2,6 +2,7 @@
 #include <string>
 #include <cstdlib>
 #include <climits>
+#include <cfloat>
 #include <iomanip>
 
 void convertChar(char a) {
@@ -86,13 +87,20 @@ void convertFloat(float f) {
 
     // float part
     std::cout << "float: ";
+    std::cout << std::fixed;
     if (f == i)
-        std::cout << std::fixed << std::setprecision(1);
+        std::cout << std::setprecision(1);
     std::cout << f << "f\n";
 
 
     // double part
     double d = static_cast<double>(f);
+    if (d == i) {
+        std::cout << std::setprecision(1);
+    }
+    else {
+        std::cout << std::setprecision(6);
+    }
     std::cout << "double: " << d << "\n";
 
 
@@ -127,12 +135,18 @@ void convertDouble(double d) {
     // float part
     float f = static_cast<float>(d);
     std::cout << "float: ";
+    std::cout << std::fixed;
     if (f == i)
-        std::cout << std::fixed << std::setprecision(1);
+        std::cout << std::setprecision(1);
     std::cout << f << "f\n";
 
-
     // double part
+    if (d == i) {
+        std::cout << std::setprecision(1);
+    }
+    else {
+        std::cout << std::setprecision(6);
+    }
     std::cout << "double: " << d << "\n";
 
 
@@ -153,8 +167,9 @@ bool isInt(const std::string& literal) {
     char *endPtr;
     long l = std::strtol(literal.c_str(), &endPtr, 10);
     if (*endPtr == '\0') {
-        if (l > INT_MAX || l < INT_MIN)
-            std::cerr << "Error: Integer Overflow/Undeflow\n";
+        if (l > INT_MAX || l < INT_MIN) {
+            return false;
+        }
         else {
             int i = static_cast<int>(l);
             convertInt(i);
@@ -164,15 +179,37 @@ bool isInt(const std::string& literal) {
     return false;
 }
 
-bool isDoubleOrFloat(const std::string& literal) {
+bool isFloat(const std::string& literal) {
     char *endPtr;
     double d = std::strtod(literal.c_str(), &endPtr);
-    if (*endPtr == '\0') {
-        convertDouble(d);
+
+    if ((*endPtr == 'f') && (*(endPtr + 1) == '\0')) {
+        if (d > FLT_MAX) {
+            std::cout << "char: impossible\n";
+            std::cout << "int: impossible\n";
+            std::cout << "float: inff\n";
+            std::cout << "double: inf\n";
+        }
+        else if (d < -FLT_MAX) {
+            std::cout << "char: impossible\n";
+            std::cout << "int: impossible\n";
+            std::cout << "float: -inff\n";
+            std::cout << "double: -inf\n";
+        }
+        else {
+            convertFloat(static_cast<float>(d));
+        }
         return true;
     }
-    if ((*endPtr == 'f') && (*(endPtr + 1) == '\0')) {
-        convertFloat(static_cast<float>(d));
+    return false;
+}
+
+bool isDouble(const std::string& literal) {
+    char *endPtr;
+    double d = std::strtod(literal.c_str(), &endPtr);
+
+    if (*endPtr == '\0') {
+        convertDouble(d);
         return true;
     }
     return false;
